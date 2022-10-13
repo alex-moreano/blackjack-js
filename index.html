@@ -13,33 +13,24 @@
         Black Jack
     </header>
     <div class="row mt-2">
-        <div class="col text-center">
-            <button class="btn btn-danger">New Game</button>
-            <button class="btn btn-primary">Give me a card</button>
-            <button class="btn btn-primary">Stop!</button>
+        <div id="divButtons" class="col text-center">
+            <button id="btnNew" class="btn btn-danger">New Game</button>
+            <button id="btnGive" class="btn btn-primary">Give me a card</button>
+            <button id="btnStop" class="btn btn-primary">Stop!</button>
         </div>
     </div>
     <div class="row container">
         <div class="col">
             <h1>Player 1 - <small>0</small></h1>
-            <div id="player-cards">
-                <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-        </div>
+            <div id="player-cards"></div>
         <div class="row container mt-2">
             <div class="col">
-                <h1>PC - <small>3</small></h1>
-                <div id="pc-cards">
-                    <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                    <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                    <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                    <img src="/assets/cartas/2C.png" alt="" class="cardbj">
-                </div>
+                <h1>PC - <small>0</small></h1>
+                <div id="pc-cards"></div>
             </div>
         </div>
     </div>
-    <script src="assets/js/game.js"></script>
-</body>
+    <script type="text/javascript" src="assets/js/underscore-min.js"></script>
+    <script type="text/javascript" src="assets/js/game.js"></script>
+</body> 
 </html>
