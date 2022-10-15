@@ -10,7 +10,7 @@
 
     let deck = [];
     const typeOfCards = ['C','D','H','S'], specialCards = ['A','J','Q','K'];
-    let playerPoints = [];
+    let playerPoints;
 
 
     //References to HTML
@@ -22,11 +22,12 @@
           divCardsPlayers = document.querySelectorAll('.divCards');
           
     const newGame = (numPlayers = 2) => {
+        playerPoints = [];
         deck = createDeck();
         for (let i = 0; i < numPlayers; i++) {
             playerPoints.push(0);
         }
-        
+        console.log({playerPoints})
         pointsHTML.forEach(elem=> elem.innerHTML = 0);
         divCardsPlayers.forEach(elem=>elem.innerHTML = '');
         btnAskCard.disabled = false;
