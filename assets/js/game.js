@@ -9,42 +9,42 @@
     'use strict'
 
     let deck = [];
-    const tipos = ['C','D','H','S'], especiales = ['A','J','Q','K'];
-    let puntosJugadores = [];
+    const typeOfCards = ['C','D','H','S'], specialCards = ['A','J','Q','K'];
+    let playerPoints = [];
 
 
     //References to HTML
-    const btnNuevo = document.querySelector('#btnNew'),
-          btnPedir = document.querySelector('#btnGive'),
-          btnParar = document.querySelector('#btnStop');
+    const btnNewGame = document.querySelector('#btnNew'),
+          btnAskCard = document.querySelector('#btnGive'),
+          btnStopGame = document.querySelector('#btnStop');
 
-    const smalls =  document.querySelectorAll('small'),
+    const pointsHTML =  document.querySelectorAll('small'),
           divCardsPlayers = document.querySelectorAll('.divCards');
           
-    const iniciarJuego = (numJugadores = 2) => {
-        deck = crearDeck();
-        for (let i = 0; i < numJugadores; i++) {
-            puntosJugadores.push(0);
+    const newGame = (numPlayers = 2) => {
+        deck = createDeck();
+        for (let i = 0; i < numPlayers; i++) {
+            playerPoints.push(0);
         }
         
-        smalls.forEach(elem=> elem.innerHTML = 0);
+        pointsHTML.forEach(elem=> elem.innerHTML = 0);
         divCardsPlayers.forEach(elem=>elem.innerHTML = '');
-        btnPedir.disabled = false;
-        btnParar.disabled = false;
+        btnAskCard.disabled = false;
+        btnStopGame.disabled = false;
     }
 
     //This function creates a new deck
-    const crearDeck = ()=>{
+    const createDeck = ()=>{
         deck = [];
         for(let i = 2; i <= 10; i++){
-            for(let tipo of tipos){
-                deck.push(i+tipo);
+            for(let type of typeOfCards){
+                deck.push(i+type);
             }
         }
 
-        for(let tipo of tipos){
-            for(let especial of especiales){
-                deck.push(especial + tipo);
+        for(let type of typeOfCards){
+            for(let special of specialCards){
+                deck.push(special + type);
             }
         }
         return _.shuffle(deck);
@@ -52,88 +52,89 @@
 
 
     //This function allows me to ask a card
-    const pedirCarta = ()=>{
+    const askCard = ()=>{
         if(deck.length === 0){
-            throw 'No hay cartas en el deck';
+            throw 'There are any cards left in the deck';
         }
         return deck.pop();
     }
 
 
-    const valorCarta = (carta)=>{
-        const valor = carta.substring(0, carta.length - 1);
-        return ((isNaN(valor))? ((valor === 'A')? 11 : 10) : valor*1);
+    const valueCard = (card)=>{
+        const valueNumber = card.substring(0, card.length - 1);
+        return ((isNaN(valueNumber))? ((valueNumber === 'A')? 11 : 10) : valueNumber*1);
     }
 
 
-    const acumularPuntos = (carta, turno)=>{
-        puntosJugadores[turno] = puntosJugadores[turno] + valorCarta(carta);
-        smalls[turno].innerText = puntosJugadores[turno];
-        return puntosJugadores[turno];
+    const makePoints = (card, turnPlayer)=>{
+        playerPoints[turnPlayer] = playerPoints[turnPlayer] + valueCard(card);
+        pointsHTML[turnPlayer].innerText = playerPoints[turnPlayer];
+        return playerPoints[turnPlayer];
     }
 
-    const crearCarta = (carta, turno) => {
-        const imgCarta = document.createElement('img');
-        imgCarta.src = `/assets/cartas/${carta}.png`;
-        imgCarta.classList.add('cardbj');
-        divCardsPlayers[turno].append(imgCarta);
+
+    const createCard = (card, turnPlayer) => {
+        const imgCard = document.createElement('img');
+        imgCard.src = `/assets/cartas/${card}.png`;
+        imgCard.classList.add('cardbj');
+        divCardsPlayers[turnPlayer].append(imgCard);
     }
 
-    const determinarGanador = () => {
-        const [puntosJugador, puntosPC] = puntosJugadores;
+    const placeTheWinner = () => {
+        const [pointsPlayer, pointsPC] = playerPoints;
 
         setTimeout(() => {
-            if(puntosPC === puntosJugador){
-                alert('Nadie gana');
-            } else if(puntosJugador > 21){
-                alert('PC gana');
-            } else if(puntosPC > 21){
-                alert('Jugador gana');
+            if(pointsPC === pointsPlayer){
+                alert('No one wins');
+            } else if(pointsPlayer > 21){
+                alert('PC wins, you lose');
+            } else if(pointsPC > 21){
+                alert('You win');
             } else{
-                alert('PC gana');
+                alert('PC wins, you lose');
             }
         }, 10);
     }
 
     //PC TURN, PC HAS TO WIN THE PLAYER
-    const turnoPC = (puntosJugador) => {
-        let puntosPC = 0;
+    const turnPC = (pointsPlayer) => {
+        let pointsPC = 0;
         do{
-            const carta = pedirCarta();
-            puntosPC = acumularPuntos(carta, puntosJugadores.length-1);
-            crearCarta(carta, puntosJugadores.length-1);
-        }while((puntosPC < puntosJugador) && (puntosJugador <= 21));        
-        determinarGanador();
+            const card = askCard();
+            pointsPC = makePoints(card, playerPoints.length-1);
+            createCard(card, playerPoints.length-1);
+        }while((pointsPC < pointsPlayer) && (pointsPlayer <= 21));        
+        placeTheWinner();
     }
 
 
     //EVENTS
-    btnPedir.addEventListener('click', () => {
-        const carta = pedirCarta();
-        let puntosJugador = acumularPuntos(carta, 0);
-        crearCarta(carta,0);
+    btnAskCard.addEventListener('click', () => {
+        const card = askCard();
+        let pointsPlayer = makePoints(card, 0);
+        createCard(card,0);
 
-        if(puntosJugador > 21)
+        if(pointsPlayer > 21)
         {
             console.warn('Lose')
-            btnPedir.disabled = true;
-            turnoPC(puntosJugador);
-        } else if (puntosJugador === 21){
+            btnAskCard.disabled = true;
+            turnPC(pointsPlayer);
+        } else if (pointsPlayer === 21){
             console.warn('Win');
         }
     });
 
     btnStop.addEventListener('click', ()=>{
-        btnPedir.disabled = true;
-        btnParar.disabled = true;
-        turnoPC(puntosJugadores[0]);
+        btnAskCard.disabled = true;
+        btnStopGame.disabled = true;
+        turnPC(playerPoints[0]);
     });
 
-    btnNuevo.addEventListener('click', ()=>{
-        iniciarJuego();        
+    btnNewGame.addEventListener('click', ()=>{
+        newGame();        
     });
 
     return {
-        newGame : iniciarJuego()
+        newGame : newGame()
     };
 })();
