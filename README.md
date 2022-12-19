@@ -6,4 +6,4 @@ Just clone the repo and the:
 
 ```
 npm install
-```js
+```
